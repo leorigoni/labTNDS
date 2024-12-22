@@ -43,7 +43,7 @@ int main(int argc, char **argv){
         double period=2*t;
         grafico.SetPoint(i, a, period);
     }
-    for(double i=31; i<31.415; i+=0.001){
+    /*for(double i=31; i<31.415; i+=0.001){
         double a=0.1*(i+0.001);
         double v=0.0;
         double t=0.0;
@@ -60,7 +60,7 @@ int main(int argc, char **argv){
         }
         double period=2*t;
         grafico.SetPoint(i, a, period);
-    }
+    }*/
     TCanvas c("grafico", "grafico");
     string title1="Pendolo (Rugne-Kutta h=" + convert(h) + ")";
     grafico.SetTitle(title1.c_str());
