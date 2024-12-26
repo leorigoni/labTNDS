@@ -59,14 +59,20 @@ void grafici(int n, int toth, vector<TH1F*> histo, vector<double> &dati){
     c.Divide(4, 2);
     for(int i=0; i<toth; i++){
         c.cd(i+1);
+        histo[i]->GetYaxis()->SetTitleOffset(1);
         histo[i]->GetXaxis()->SetTitle("Integrale");
         histo[i]->GetYaxis()->SetTitle("N");
         histo[i]->Draw();                
     }
     TGraph err;
     c.cd(8);
-    for(int i=0; i<(toth-1); i++){
-        int tmp=20;
+    gPad->SetLogy();
+    gPad->SetLogx();
+    gPad->SetGridy();
+    gPad->SetGridx();
+    int tmp=100;
+    for(int i=0; i<toth; i++){
+        for(int k=tmp; k<tmp*5; k+=tmp*5){
         double mean=0.;
         double sum=0.;
         for(int t=n*i; t<n*(i+1); t++){
@@ -78,8 +84,19 @@ void grafici(int n, int toth, vector<TH1F*> histo, vector<double> &dati){
             totsum+=pow(dati[t]-mean, 2);
         }
         double stddev=sqrt(totsum/n);
-        err.SetPoint(i, i, stddev);
+        err.SetPoint(i, k, stddev);
+        }
+        tmp=tmp*5;
     }
+    err.GetYaxis()->SetTitleOffset(1);
+    err.SetTitle("Errore su ogni Integrale");
+    err.GetXaxis()->SetTitle("N");
+    err.GetYaxis()->SetTitle("Errore");
+    err.SetMarkerColor(kBlack);
+    err.SetMarkerSize(0.4);
+    err.SetMarkerStyle(20);
+    err.SetLineColor(kRed);
+    err.SetLineWidth(1);
     err.Draw("APL");
     c.SaveAs("Integrale.pdf");
 }
