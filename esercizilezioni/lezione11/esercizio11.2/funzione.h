@@ -6,12 +6,6 @@
 #include<iostream>
 #include<cmath>
 #include<iomanip>
-#include"TGraph.h"
-#include"TApplication.h"
-#include"TCanvas.h"
-#include"TAxis.h"
-#include"TLine.h"
-#include"TH1F.h"
 using namespace std;
 
 //#################
