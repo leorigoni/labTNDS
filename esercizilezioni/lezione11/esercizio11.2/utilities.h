@@ -6,16 +6,28 @@
 #include"TLine.h"
 #include"TH1F.h"
 
-vector<double> calcint(int n, int toth, int tmp, double a, double b){
+vector<double> calcint(int n, int toth, int tmp, double a, double b, string method){
     vector<double> dati;
-    for(int i=0; i<toth; i++){
-        xsinx f;
-        media m(0);
-        for(int j=0; j<n; j++){
-            dati.push_back(m.integra(tmp*5, a, b, f));
-            cout << i+1 << "." << j << ": "<< m.integra(tmp*5, a, b, f) << endl;
+    if(method=="media"){
+        for(int i=0; i<toth; i++){
+            xsinx f;
+            media m(0);
+            for(int j=0; j<n; j++){
+                dati.push_back(m.integra(tmp*5, a, b, f));
+                cout << i+1 << "." << j << ": "<< m.integra(tmp*5, a, b, f) << endl;
+            }
+            tmp=tmp*5;
+        }    
+    }else if(method=="hitmiss"){
+        for(int i=0; i<toth; i++){
+            xsinx f;
+            hitmiss m(0);
+            for(int j=0; j<n; j++){
+                dati.push_back(m.integra(tmp*5, a, b, f));
+                cout << i+1 << "." << j << ": "<< m.integra(tmp*5, a, b, f) << endl;
+            }
+            tmp=tmp*5;
         }
-        tmp=tmp*5;
     }
     return dati;
 }
@@ -53,7 +65,7 @@ vector<TH1F*> istogrammi(int n, int toth, vector<double> &dati){
     }
     return histo;
 }
-void grafici(int n, int toth, vector<TH1F*> histo, vector<double> &dati){
+void grafici(int n, int toth, vector<TH1F*> histo, vector<double> &dati, string method){
     TCanvas c("Integrale (xsin(x))", "Integrale (xsin(x))");
     c.cd();
     c.Divide(4, 2);
@@ -98,5 +110,7 @@ void grafici(int n, int toth, vector<TH1F*> histo, vector<double> &dati){
     err.SetLineColor(kRed);
     err.SetLineWidth(1);
     err.Draw("APL");
-    c.SaveAs("Integrale.pdf");
+    stringstream nomepdf;
+    nomepdf << "Integrale_" << method << ".pdf";
+    c.SaveAs(nomepdf.str().c_str());
 }

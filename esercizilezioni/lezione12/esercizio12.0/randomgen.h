@@ -1,12 +1,6 @@
 #ifndef __randomgen_h__
 #define __randomgen_h__
-
-#include<iostream>
-#include<cmath>
-#include<fstream>
-#include<string>
-#include<sstream>
-using namespace std;
+#include"include.h"
 
 class randomgen{
 
@@ -18,8 +12,8 @@ class randomgen{
     double Rand();
     double unif(double xmin, double xmax);
     double exp(double lambda);
-    double gausbm(double mean, double sigma);
-    double gausar(double mean, double sigma, double a, double b);
+    double gaussbm(double mean, double sigma);
+    double gaussar(double mean, double sigma, double a, double b);
 
     private:
     unsigned int m_a, m_c, m_m;
@@ -45,7 +39,7 @@ double randomgen::exp(double lambda){
     double x=-log(1-Rand());
     return x/lambda;
 }
-double randomgen::gausbm(double mean, double sigma){
+double randomgen::gaussbm(double mean, double sigma){
     double s=Rand();
     double t=Rand();
     double x=sqrt(-2.0*log(1.0-s))*cos(2.0*M_PI*t);
@@ -54,7 +48,7 @@ double randomgen::gausbm(double mean, double sigma){
 double calcgauss(double x, double mean, double sigma){
     return 1/(sigma*sqrt(2*M_PI))*exp(-pow(mean-x, 2)/(2*sigma*sigma));
     };
-double randomgen::gausar(double mean, double sigma, double a, double b){
+double randomgen::gaussar(double mean, double sigma, double a, double b){
     double max=calcgauss(mean, mean, sigma);
     double y=max*Rand();
     double x=unif(a, b);

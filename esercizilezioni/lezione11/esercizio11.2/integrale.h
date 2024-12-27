@@ -37,6 +37,15 @@ class media: public integrale, public randomgen{
     int getnstep() const{return m_nstep;}
     double geterr() const{return m_err;}
 };
+class hitmiss: public integrale, public randomgen{
+    public:
+    hitmiss(unsigned int seed) : randomgen(seed){;};
+    ~hitmiss();
+    double integra(int n, double a, double b,
+                             const funzione &) override;
+    int getnstep() const{return m_nstep;}
+    double geterr() const{return m_err;}
+};
 
 //#####################
 //# IMPLEMENTATION #
@@ -54,6 +63,34 @@ double media::integra(int n, double a, double b, const funzione &f){
     return m_integrale;
 }
 media::~media(){
+}
+double findmax(double a, double b, const funzione &f){
+    double ymax=numeric_limits<double>::lowest();
+    double tmp=0.;
+    for(double i=a; i<b; i+=0.0001){
+        tmp=f.eval(i);
+        if(tmp>ymax){
+            ymax=tmp;
+        }
+    }
+    return ymax;
+}
+double hitmiss::integra(int n, double a, double b, const funzione &f){
+    checkintervallo(a, b);
+    int ntot=0;
+    int nhit=0;
+    for(int i=0; i<n; i++){
+        double x=unif(a, b);
+        double y=unif(0, findmax(a, b, f));
+        ntot++;
+        if(y<=f.eval(x)){
+            nhit++;
+        }
+    }
+    m_integrale=(b-a)*findmax(a, b, f)*(nhit/ntot);
+    return m_integrale;
+}
+hitmiss::~hitmiss(){
 }
 
 #endif
