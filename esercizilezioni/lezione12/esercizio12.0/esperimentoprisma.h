@@ -57,7 +57,7 @@ void esperimentoprisma::analizza(){
     m_n2mis=sin((m_dm2mis+m_alpha)/2.)/sin(0.5*m_alpha);
     m_dm1mis=m_th1mis-m_th0mis;
     m_n1mis=sin((m_dm1mis+m_alpha)/2.)/sin(0.5*m_alpha);
-    m_amis=(abs(pow(m_n2mis, 2)*pow(m_lambda2, 2)-pow(m_n1mis, 2)*pow(m_lambda1, 2)))/2;
-    m_bmis=pow(m_n2mis, 2)*pow(m_lambda2, 2)-m_amis;
+    m_bmis=(pow(m_n2mis, 2)-pow(m_n1mis, 2))/((1/pow(m_lambda2, 2))-(1/pow(m_lambda1, 2)));
+    m_amis=pow(m_n1mis, 2)-(m_bmis/pow(m_lambda1, 2));
 }
 #endif
