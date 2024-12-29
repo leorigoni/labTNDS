@@ -18,6 +18,15 @@ class esperimentoprisma{
     double getth0mis(){return m_th0mis;};
     double getth1mis(){return m_th1mis;};
     double getth2mis(){return m_th2mis;};
+    double getainput(){return m_ainput;};
+    double getbinput(){return m_binput;};
+    double getn1input(){return m_n1input;};
+    double getn2input(){return m_n2input;};
+    double getdm1input(){return m_dm1input;};
+    double getdm2input(){return m_dm2input;};
+    double getth0input(){return m_th0input;};
+    double getth1input(){return m_th1input;};
+    double getth2input(){return m_th2input;};
 
     private:
     randomgen m_rgen ;

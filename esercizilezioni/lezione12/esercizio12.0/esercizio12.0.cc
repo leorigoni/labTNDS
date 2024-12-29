@@ -3,6 +3,7 @@
 int main(){
     int n=10000;
     esperimentoprisma e(1);
+    cout << scientific << setprecision(3);
     vector<TH1F*> histoth=getth(n, e);
     vector<TH1F*> histodm=getdm(n, e);
     TH2F histodm12=getdm12(n, e);
