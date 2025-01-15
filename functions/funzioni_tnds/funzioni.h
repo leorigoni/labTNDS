@@ -60,16 +60,19 @@ namespace funzioni_info{
     }
 
     //computing
-    void sortup(mesure *mesures, int lines){
-        for(int i=0; i<lines-1; i++){
-            for(int j=i+1; j<lines; j++){
-                if(mesures[i].m1>mesures[j].m1){
-                    mesure tmp=mesures[i];
-                    mesures[i]=mesures[j];
-                    mesures[j]=tmp;
+    template <typename t> void sortup(vector<t>& a){
+        for(int i=0; i<a.size()-1; i++){
+            for(int j=i+1; j<a.size(); j++){
+                if(a[i]>a[j]){
+                    t tmp=a[i];
+                    a[i]=a[j];
+                    a[j]=tmp;
                 }
             }
         }
+    }
+    template <typename t> void sortup(vector<t>& a){
+    sort(a.begin(), a.end());
     }
     void sortdown(mesure *mesures, int lines){
         for(int i=0; i<lines-1; i++){
