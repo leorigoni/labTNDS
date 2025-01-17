@@ -71,8 +71,8 @@ namespace funzioni_info{
             }
         }
     }
-    template <typename t> void sortup(vector<t>& a){
-    sort(a.begin(), a.end());
+    template <typename t> void sortupfast(vector<t>& a){
+        sort(a.begin(), a.end());
     }
     void sortdown(mesure *mesures, int lines){
         for(int i=0; i<lines-1; i++){

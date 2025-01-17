@@ -36,7 +36,7 @@ class simpson: public integrale{
     int getnstep() const{return m_nstep;}
 };
 
-//TRAPEZI
+//TRAPEZI (MEDIA ???)
 class trapezi: public integrale{
     public:
     ~trapezi();
@@ -77,16 +77,6 @@ class midleft: public integrale{
     int getnstep() const{return m_nstep;}
 };
 
-//MEDIA
-class media: public integrale{
-    public:
-    ~media();
-    double integra(double, double, 
-                            unsigned int, 
-                            const funzione &) override;
-    int getnstep() const{return m_nstep;}
-};
-
 //#####################
 //# IMPLEMENTATION #
 //#####################
@@ -119,7 +109,7 @@ double simpson::integra(double inizio, double fine, const funzione &f, int nstep
 simpson::~simpson(){
 }
 
-//TRAPEZI
+//TRAPEZI (MEDIA ???)
 double trapezi::integra(double inizio, double fine, const funzione &f, double prec){
     checkintervallo(inizio, fine);
     m_nstep=2;
@@ -206,8 +196,5 @@ double midleft::integra(double inizio, double fine, unsigned int nstep, const fu
 }
 midleft::~midleft(){
 }
-
-//MEDIA 
-//da implementare e capire cos'è.
 
 #endif
