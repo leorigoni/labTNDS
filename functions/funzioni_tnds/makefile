@@ -1,4 +1,4 @@
-LL=funzioni.cc #funzioni.cc is the file that contains the main function
+LL=main.cc #funzioni.cc is the file that contains the main function
 AA=qualsiasi.h #qualsiasi.h is the file that contains the function prototypes
 LIBS:=`root-config --libs` #necessaria per root
 INCS:=`root-config --cflags` #necessaria per root
