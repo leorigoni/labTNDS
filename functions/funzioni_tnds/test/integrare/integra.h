@@ -16,8 +16,8 @@ Midright (prec): 1000.929839 in 23787 ms
 Midleft (step): 1000.437580 in 215 ms
 Midleft (prec): "correct" in "to long to compute" ms
 */
-#ifndef __integrazione_h__
-#define __integrazione_h__
+#ifndef __integrale_h__
+#define __integrale_h__
 #include"include.h" //cstdlib, cmath, iostream, iomanip
 #include"funzione.h" //funzione
 

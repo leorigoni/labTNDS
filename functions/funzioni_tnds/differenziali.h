@@ -10,24 +10,21 @@
 class eqdiff{
     public:
     virtual ~eqdiff();
-    virtual vector<double> passo(double, const vector<double> &,
-                                double, const funzione &)const=0;
+    virtual vector<double> passo(double, const vector<double> &, double, const funzione &)const=0;
 };
 
 //EULERO
 class eulero: public eqdiff{
     public:
     ~eulero();
-    vector<double> passo(double, const vector<double> &,
-                                        double, const funzione &)const override;
+    vector<double> passo(double, const vector<double> &, double, const funzione &)const override;
 };
 
 //RUNGE-KUTTA
 class rungekutta: public eqdiff{
     public:
     ~rungekutta();
-    vector<double> passo(double, const vector<double> &,
-                                        double, const funzione &)const override;
+    vector<double> passo(double, const vector<double>, double, const funzione &)const override;
 }; 
 
 //#####################
@@ -38,16 +35,14 @@ eqdiff::~eqdiff(){
 }
 
 //EULERO
-vector<double> eulero::passo(double t, const vector<double> &x,
-                                                double h, const funzione &f)const override{
+vector<double> eulero::passo(double t, const vector<double> &x, double h, const funzione &f)const override{
     return x+(f.eval(t, x))*h;
 }
 eulero::~eulero(){
 }
 
 //RUNGE-KUTTA
-vector<double> rungekutta::passo(double t, const vector<double> &x,
-                                                        double h, const funzione &f)const override{
+vector<double> rungekutta::passo(double t, const vector<double> &x, double h, const funzione &f)const override{
         vector<double> k1=f.eval(t, x);
         vector<double> k2=f.eval(t+h/2.0, x+k1*(h/2.0));
         vector<double> k3=f.eval(t+h/2.0, x+k2*(h/2.0));
