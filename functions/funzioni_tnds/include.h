@@ -12,6 +12,8 @@
 #include<limits> //limiti numerici
 #include<filesystem> //controllo esistenza file
 #include<chrono> //tempo
+#include<utility> //get paired response from function
+#include<tuple> //get multiple response from function
 
 #include"TH1F.h" //istogrammi 1D
 #include"TApplication.h" //app per mostrare grafici

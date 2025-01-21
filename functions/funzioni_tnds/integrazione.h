@@ -44,6 +44,11 @@ class integrale{
         cout << "Error, this function is not implemented" << endl;
         exit(-1);
     }; //non incluso, uguale al metodo non comp solo che l'intervallo viene divisio in sotto intervalli nei quali poi viene applicato il relativo metodo
+    double geth() const{return m_h;}
+    double getprec() const{return m_prec;}
+    double geterr() const{return m_err;}
+    int getnstep() const{return m_nstep;}
+    int getnintervals() const{return m_nintervals;}
 
     protected:
     void checkintervallo(double a, double b){
@@ -62,8 +67,6 @@ class simpson: public integrale{
     ~simpson();
     double integra_step(double, double, int, const funzione &) override;
     double integra_prec(double, double, double, const funzione &) override;
-    double geth() const{return m_h;}
-    int getnstep() const{return m_nstep;}
 };
 
 //TRAPEZI (MEDIA ???)
@@ -72,8 +75,6 @@ class trapezi: public integrale{
     ~trapezi();
     double integra_step(double, double, int, const funzione &) override;
     double integra_prec(double, double, double, const funzione &) override;
-    int getnstep() const{return m_nstep;}
-    double geterr() const{return m_err;}
 };
 
 //MIDPOINT
@@ -82,7 +83,6 @@ class midpoint: public integrale{
     ~midpoint();
     double integra_step(double, double, int, const funzione &) override;
     double integra_prec(double, double, double, const funzione &) override;
-    int getnstep() const{return m_nstep;}
 };
 
 //MIDRIGHT
@@ -91,7 +91,6 @@ class midright: public integrale{
     ~midright();
     double integra_step(double, double, int, const funzione &) override;
     double integra_prec(double, double, double, const funzione &) override;
-    int getnstep() const{return m_nstep;}
 };
 
 //MIDLEFT
@@ -100,7 +99,6 @@ class midleft: public integrale{
     ~midleft();
     double integra_step(double, double, int, const funzione &) override;
     double integra_prec(double, double, double, const funzione &) override;
-    int getnstep() const{return m_nstep;}
 };
 
 //#####################
