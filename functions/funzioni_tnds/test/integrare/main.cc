@@ -9,8 +9,8 @@ int main(){
     midleft ml;
     double inizio=0.;
     double fine=1000.;
-    double prec=0.0000001;
-    int nstep=10000000;
+    double prec=0.001;
+    int nstep=10;
 
     fixed(cout);
     setprecision(6);

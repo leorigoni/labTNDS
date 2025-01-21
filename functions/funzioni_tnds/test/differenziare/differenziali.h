@@ -1,5 +1,5 @@
-#ifndef __differenziali_h__
-#define __differenziali_h__
+#ifndef __rugnekutta_h__
+#define __rugnekutta_h__
 #include"include.h" //cmath, operators.h, iostream, vector, cassert, algorithm, numeric
 #include"funzione.h" //funzione
 
