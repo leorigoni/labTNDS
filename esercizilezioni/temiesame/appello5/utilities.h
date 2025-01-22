@@ -1,5 +1,5 @@
 #include"condensiamo.h"
-
+/*
 double findmin(vector<double> a){
     double min=numeric_limits<double>::max();
     for(int i=0; i<a.size(); i++){
@@ -39,12 +39,12 @@ vector<TH1F*> getth(int n, condensatore &e){
             }       
         }
     }
-    /*for(int i=0; i<n; i++){
+    $$for(int i=0; i<n; i++){
         th0mis[i]=th0mis[i]-e.getth0input();
         th1mis[i]=th1mis[i]-e.getth1input();
         th2mis[i]=th2mis[i]-e.getth2input();
-    }*/
-    for(int t=0; t<3; t++){
+    }$$
+        for(int t=0; t<3; t++){
         if(t==0){
             double min=findmin(th0mis);
             double max=findmax(th0mis);
@@ -463,4 +463,4 @@ void drawgraph(vector<TH1F*> &histoth, vector<TH1F*> &histodm, TH2F &histodm12,
     histoab.GetYaxis()->SetTitle("B.mis-B.in");
     histoab.Draw();   
     c.SaveAs("Graphs.pdf");
-}
+}*/
