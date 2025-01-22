@@ -48,11 +48,10 @@ namespace funzioni_info{
         input.seekg(0, ios::beg);
         return columncount;
     }
-    void copydata(ifstream &input, mesure *mesures, int lines){
-        for(int i=0; i<lines; i++){
-            input >> mesures[i].m1 >> mesures[i].m2
-                >> mesures[i].m3 >> mesures[i].m4
-                >> mesures[i].m5;
+    template <typename t> void copydata(ifstream &input, vector<t> &a){
+        t data_in;
+        while(input >> data_in){
+            a.push_back(data_in);
         }
     }
     void closefile(ifstream &input){
@@ -74,98 +73,87 @@ namespace funzioni_info{
     template <typename t> void sortupfast(vector<t>& a){
         sort(a.begin(), a.end());
     }
-    void sortdown(mesure *mesures, int lines){
-        for(int i=0; i<lines-1; i++){
-            for(int j=i+1; j<lines; j++){
-                if(mesures[i].m1<mesures[j].m1){
-                    mesure tmp=mesures[i];
-                    mesures[i]=mesures[j];
-                    mesures[j]=tmp;
+    template <typename t> void sortdown(vector<t>& a){
+        for(int i=0; i<a.size()-1; i++){
+            for(int j=i+1; j<a.size(); j++){
+                if(a[i]<a[j]){
+                    t tmp=a[i];
+                    a[i]=a[j];
+                    a[j]=tmp;
                 }
             }
         }
     }
-    int findmax(mesure *mesures, int lines){
-        int max=numeric_limits<int>::min();
-        for(int i=0; i<lines; i++){
-            if(mesures[i].m1>max){
-                max=mesures[i].m1;
+    template <typename t> t findmax(vector<t> &a){
+        t max=numeric_limits<t>::min();
+        for(int i=0; i<a.size(); i++){
+            if(a[i]>max){
+                max=a[i];
             }
         }
         return max;
     }
-    int findmin(mesure *mesures, int lines){
-        int min=numeric_limits<int>::max();
-        for(int i=0; i<lines; i++){
-            if(mesures[i].m1<min){
-                min=mesures[i].m1;
+    template <typename t> t findmin(vector<t> &a){
+        t min=numeric_limits<int>::max();
+        for(int i=0; i<a.size(); i++){
+            if(a[i]<min){
+                min=a[i];
             }
         }
         return min;
     }
-    double calcmean(mesure *mesures, int lines){
-        double sum=0;
-        for(int i=0; i<lines; i++){
-            sum+=mesures[i].m2;
+    template <typename t> double calcmean(vector<t> &a){
+        t sum=0;
+        for(int i=0; i<a.size(); i++){
+            sum+=a[i];
         }
-        double mean=sum/lines;
+        double mean=sum/a.size();
         return mean;
     }
-    double calcstddevmean(mesure *mesures, int lines, double mean){
+    template <typename t> double calcstddevmean(vector<t> &a){
+        t sum=0;
+        for(int i=0; i<a.size(); i++){
+            sum+=a[i];
+        }
+        double mean=sum/a.size();
         double sumsq=0;
-        for(int i=0; i<lines; i++){
-            sumsq+=pow(mesures[i].m2-mean,2);
+        for(int i=0; i<a.size(); i++){
+            sumsq+=pow(a[i]-mean,2);
         }
         double stddevmean=0;
-        stddevmean=sqrt(sumsq/(lines-1))/sqrt(lines);
+        stddevmean=sqrt(sumsq/(a.size()-1))/sqrt(a.size());
         return stddevmean;
     }
-    int findtottrue(mesure *mesures, int lines){
+    template <typename t> int findtottrue(vector<t> &a){
         int tottrue=0;
-        for(int i=0; i<lines; i++){
-            if(mesures[i].m5==true){
+        for(int i=0; i<a.size(); i++){
+            if(a[i].tf==true){ //immaginato come un vettore di struct dove tf è un bool
                 tottrue++;
             }
         }
         return tottrue;
     }
-    int findtotfalse(mesure *mesures, int lines){
+    template <typename t> int findtotfalse(vector<t> &a){
         int totfalse=0;
-        for(int i=0; i<lines; i++){
-            if(mesures[i].m5==false){
+        for(int i=0; i<a.size(); i++){
+            if(a[i].tf==false){ //immaginato come un vettore di struct dove tf è un bool
                 totfalse++;
             }
         }
         return totfalse;
     }
-    void devidetruefalse(mesure *mesures, mesure *tmesures,
-    mesure *fmesures, int lines, int tottrue, int totfalse){
-        int jtrue=0;
-        for(int i=0; i<lines; i++){
-            if(mesures[i].m5==true){
-                tmesures[jtrue].m1=mesures[i].m1;
-                tmesures[jtrue].m2=mesures[i].m2;
-                tmesures[jtrue].m3=mesures[i].m3;
-                tmesures[jtrue].m4=mesures[i].m4;
-                tmesures[jtrue].m5=mesures[i].m5;
-                jtrue++;
-            }
-        }
-        int jfalse=0;
-            for(int i=0; i<lines; i++){
-            if(mesures[i].m5==false){
-                fmesures[jfalse].m1=mesures[i].m1;
-                fmesures[jfalse].m2=mesures[i].m2;
-                fmesures[jfalse].m3=mesures[i].m3;
-                fmesures[jfalse].m4=mesures[i].m4;
-                fmesures[jfalse].m5=mesures[i].m5;
-                jfalse++;
+    template <typename t> void devidetruefalse(vector<t> &a, vector<t> &b_true, vector<t> &b_false){
+        for(int i=0; i<a.size(); i++){
+            if(a[i].tf==true){ //immaginato come un vettore di struct dove tf è un bool
+                b_true.push_back(a[i]);
+            }else{
+                b_false.push_back(a[i]);
             }
         }
     }
-    void duplarray(double *data, double * sortdata, int ndata){
-        for(int i=0; i<ndata; i++){
-            sortdata[i]=data[i];
+    template <typename t> void duplarray(vector<t> &a, vector<t> &b){
+        for(int i=0; i<a.size(); i++){
+            b.push_back(a[i]);
         }
     }
 
