@@ -10,8 +10,7 @@ template <typename t> inline vector<t> operator+(const vector<t> &a, const vecto
         result[i]=a[i]+b[i];
     }    
     return result;
-}
-                                                                                              
+}                                                                                             
 template <typename t> inline vector<t> operator-(const vector<t> &a, const vector<t> &b){
     if(a.size()!=b.size()){ 
         cout << "Trying to subtract vectors with different size, exiting" << endl ; 
@@ -23,7 +22,6 @@ template <typename t> inline vector<t> operator-(const vector<t> &a, const vecto
     }    
     return result;
 }
-
 template <typename t> inline t operator*(const vector<t> &a, const vector<t> &b){
     if(a.size()!=b.size()){
         cout << "Trying to multiply vectors with different size, exiting" << endl ;
@@ -35,7 +33,6 @@ template <typename t> inline t operator*(const vector<t> &a, const vector<t> &b)
     }
     return sum; 
 }
-
 template <typename t> inline vector<t> operator*(t c, const vector<t> &a){
     vector<t> result(a.size());
     for(int i=0; i<static_cast<int>(a.size()); i++){
@@ -43,7 +40,6 @@ template <typename t> inline vector<t> operator*(t c, const vector<t> &a){
     }
     return result;
 }
-
 template <typename t> inline vector<t> operator*(const vector<t> &a, t c){
     vector<t> result(a.size());
     for(int i=0; i<static_cast<int>(a.size()); i++){
@@ -51,15 +47,17 @@ template <typename t> inline vector<t> operator*(const vector<t> &a, t c){
     }
     return result;
 }
-
 template <typename t> inline vector<t> operator/(const vector<t> &a, t c){
     vector<t> result(a.size());
+    if(c==0){
+        cout << "Trying to divide by zero, exiting" << endl;
+        exit(-1);
+    }
     for(int i=0; i<static_cast<int>(a.size()); i++){
         result[i]=a[i]/c;
     }
     return result;
 }
-
 template <typename t> inline vector<t>& operator+=(vector<t>& a, const vector<t>& b){
     if(a.size()!=b.size()){
         cout << "Trying to sum vectors with different size, exiting" << endl ;
@@ -70,7 +68,6 @@ template <typename t> inline vector<t>& operator+=(vector<t>& a, const vector<t>
     }
     return a;
 }
-
 template <typename t> inline vector<t>& operator-=(vector<t>& a, const vector<t>& b){
     if(a.size()!=b.size()){
         cout << "Trying to subtract vectors with different size, exiting" << endl ;
@@ -81,8 +78,33 @@ template <typename t> inline vector<t>& operator-=(vector<t>& a, const vector<t>
     }
     return a;
 }
-
-template <typename t> inline void print(const vector<t> &v ){
+template <typename t> inline vector<t>& operator*=(vector<t>& a, const vector<t>& b){
+    if(a.size()!=b.size()){
+        cout << "Trying to multiply vectors with different size, exiting" << endl ;
+        exit(-1);
+    };
+    for(int i=0; i<static_cast<int>(a.size()); i++){
+        a[i]*=b[i];
+    }
+    return a;
+}
+template <typename t> inline vector<t>& operator/=(vector<t>& a, const vector<t>& b){
+    if(a.size()!=b.size()){
+        cout << "Trying to divide vectors with different size, exiting" << endl ;
+        exit(-1);
+    };
+    for(int i=0; i<b.size(); i++){
+        if(b[i]==0){
+            cout << "Trying to divide by zero at index " << i << ", exiting" << endl;
+            exit(-1);
+        }
+    }
+    for(int i=0; i<static_cast<int>(a.size()); i++){
+        a[i]/=b[i];
+    }
+    return a;
+}
+template <typename t> inline void print(const vector<t> &v){
     cout << "Printing vector" << endl;
     for(auto it=v.begin(); it!=v.end(); it++ ){
         cout << *it << " " ;
@@ -90,9 +112,6 @@ template <typename t> inline void print(const vector<t> &v ){
     cout << endl;
     cout << "End of printing vector" << endl;
 };
-
-// ===============================================================================
-
 template <typename t> class linearvector: public vector<t>{
     public:
     linearvector<t>(): vector<t>(){};
