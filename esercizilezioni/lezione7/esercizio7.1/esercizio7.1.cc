@@ -1,7 +1,5 @@
 #include"integrale.h"
 
-//ciao sofi
-
 int main(int argc, char** argv){
     if(argc!=2){
         cout << "Neded by " << argv[0] << ": <nstep> " << endl;
