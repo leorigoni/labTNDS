@@ -12,7 +12,7 @@ INCS:=`root-config --cflags`
 $(OO): $(LL) $(AA) $(BB) $(TT) $(NN) $(DD) $(SS)
 	g++ -o $(OO) $(LL) ${LIBS} ${INCS}
 
-compito: $(OO)
+run: $(OO)
 	./$(OO)
 
 clean: $(OO)
