@@ -2,7 +2,7 @@
 #include"integrazione.h"
 #include"montecarlo.h"
 
-template <typename t> double calcstddevmean(vector<t> &a){
+template <typename t> double stddev(vector<t> &a){
     t sum=0;
     for(int i=0; i<a.size(); i++){
         sum+=a[i];
@@ -12,8 +12,8 @@ template <typename t> double calcstddevmean(vector<t> &a){
     for(int i=0; i<a.size(); i++){
         sumsq+=pow(a[i]-mean,2);
     }
-    double stddevmean=sqrt(sumsq/(a.size()-1))/*/sqrt(a.size())*/;
-    return stddevmean;
+    double stddev=sqrt(sumsq/(a.size()));
+    return stddev;
 }
 
 int main(){
@@ -68,7 +68,7 @@ int main(){
         tmp=s.getintegrale();
         integrali_x1x2.push_back(tmp);
     }
-    double epsilon2=calcstddevmean<double>(integrali_x1x2);
+    double epsilon2=stddev<double>(integrali_x1x2);
     cout << "Punto 4)" << endl;
     cout << endl;
     cout << "Valore stimato dell'errore dell'integrale della funzione sull'intervallo [" << setprecision(4) << x1 << "; " << x2 <<  "]: " << epsilon2 << endl;
@@ -76,12 +76,25 @@ int main(){
     cout << endl;
 
     //Punto 5)
-    double useless=t.integra_prec(x1, x2, epsilon2, f);
+    double useless=t.integra_prec(x1, x2, epsilon2, f); //metodo uno
     int nstep=t.getnstep();
     cout << "Punto 5)" << endl;
     cout << endl;
     cout << "Numero di passi per trovare il valore dell'integrale con un precisione di " << epsilon2 << ": " << nstep << endl;
-    cout << endl;
+    /*double i=1.; //metodo due
+    double tmp11=0.;
+    double tmp21=0.;
+    while(true){
+        tmp11=t.integra_prec(x1, x2, i, f);
+        tmp21=t.integra_prec(x1, x2, i/2, f);
+        if(fabs(tmp11-tmp21)<epsilon2){
+            int nstep2=t.getnstep();
+            cout << "Numero di passi per trovare il valore dell'integrale con un precisione di " << epsilon2 << ": " << nstep2 << endl;
+            break;
+        }
+        i-=0.001;
+    }*/
+    cout << endl; //non so quale dei due sia corretto, e mi danno due risultati completamente diversi
 
     //Punto 6)
     double passo=0.1;
