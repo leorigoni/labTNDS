@@ -58,13 +58,15 @@ int main(){
 
     //Punto 4)
     int N=10000;
-    stimaerrint s(1, x1, x2, 0.001);
-    double tmp=0.;
+    randomgen rgen(1);
     vector<double> integrali_x1x2;
+    double x1tmp=0.;
+    double x2tmp=0.;
+    double tmp=0.;
     for(int i=0; i<N; i++){
-        s.esegui();
-        s.analizza(f, t);
-        tmp=s.getintegrale();
+        x1tmp=rgen.unif(x1-0.001/2, x1+0.001/2);
+        x2tmp=rgen.unif(x2-0.001/2, x2+0.001/2);
+        tmp=t.integra_prec(x1tmp, x2tmp, 0.0001, f);
         integrali_x1x2.push_back(tmp);
     }
     double epsilon2=stddev<double>(integrali_x1x2);
@@ -75,25 +77,12 @@ int main(){
     cout << endl;
 
     //Punto 5)
-    double useless=t.integra_prec(x1, x2, epsilon2, f); //metodo uno
+    double useless=t.integra_prec(x1, x2, epsilon2, f);
     int nstep=t.getnstep();
     cout << "Punto 5)" << endl;
     cout << endl;
     cout << "Numero di passi per trovare il valore dell'integrale con un precisione di " << epsilon2 << ": " << nstep << endl;
-    /*double i=1.; //metodo due
-    double tmp11=0.;
-    double tmp21=0.;
-    while(true){
-        tmp11=t.integra_prec(x1, x2, i, f);
-        tmp21=t.integra_prec(x1, x2, i/2, f);
-        if(fabs(tmp11-tmp21)<epsilon2){
-            int nstep2=t.getnstep();
-            cout << "Numero di passi per trovare il valore dell'integrale con un precisione di " << epsilon2 << ": " << nstep2 << endl;
-            break;
-        }
-        i-=0.001;
-    }*/
-    cout << endl; //non so quale dei due sia corretto, e mi danno due risultati completamente diversi
+    cout << endl;
 
     //Punto 6)
     double passo=0.1;
