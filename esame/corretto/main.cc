@@ -49,8 +49,7 @@ int main(){
     cout << endl;
 
     //Punto 3)
-    double integrale_x1x2_prec=t.integra_prec(x1, x2, 0.0001, f);
-    double epsilon1=fabs(integrale_x1x2-integrale_x1x2_prec);
+    double epsilon1=4/3*fabs(t.integra_step(x1, x2, n, f)-t.integra_step(x1, x2, n*2, f));
     cout << "Punto 3)" << endl;
     cout << endl;
     cout << "Valore stimato dell'errore dell'integrale della funzione sull'intervallo [" << setprecision(4) << x1 << "; " << x2 <<  "]: " << epsilon1 << endl;
