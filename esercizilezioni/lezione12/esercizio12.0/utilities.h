@@ -1,5 +1,28 @@
 #include"esperimentoprisma.h"
 
+struct esperimento{
+    vector<double> th0mis;
+    vector<double> th1mis;
+    vector<double> th2mis;
+    vector<double> dm1mis;
+    vector<double> dm2mis;
+    vector<double> dm1input;
+    vector<double> dm2input;
+    vector<double> n1mis;
+    vector<double> n2mis;
+    vector<double> n1input;
+    vector<double> n2input;
+    vector<double> amis;
+    vector<double> ainput;
+    vector<double> bmis;
+    vector<double> binput;
+};
+
+/*struct doppiohisto{
+    vector<TH1F*> histo1;
+    TH2F histo2; work in progress...
+};*/
+
 double findmin(vector<double> a){
     double min=numeric_limits<double>::max();
     for(int i=0; i<a.size(); i++){
@@ -18,59 +41,39 @@ double findmax(vector<double> a){
     }
     return max;
 }
-vector<TH1F*> getth(int n, esperimentoprisma &e){
+
+vector<TH1F*> getth(int n, esperimento &esp){
     vector<TH1F*> histoth;
     for(auto &hist:histoth){
         hist->StatOverflows(kTRUE);
     }
-    vector<double> th0mis;
-    vector<double> th1mis;
-    vector<double> th2mis;
-    for(int t=0; t<3; t++){
-        for(int i=0; i<n; i++){
-            e.esegui();
-            e.analizza();
-            if(t==0){
-                th0mis.push_back(e.getth0mis());
-            }else if(t==1){
-                th1mis.push_back(e.getth1mis());
-            }else if(t==2){
-                th2mis.push_back(e.getth2mis());
-            }       
-        }
-    }
-    /*for(int i=0; i<n; i++){
-        th0mis[i]=th0mis[i]-e.getth0input();
-        th1mis[i]=th1mis[i]-e.getth1input();
-        th2mis[i]=th2mis[i]-e.getth2input();
-    }*/
     for(int t=0; t<3; t++){
         if(t==0){
-            double min=findmin(th0mis);
-            double max=findmax(th0mis);
+            double min=findmin(esp.th0mis);
+            double max=findmax(esp.th0mis);
             histoth.push_back(new TH1F(Form("Legenda %d", t), Form("Th%d misurati", t), 100, min, max));
             for(int i=0; i<n; i++){
-                histoth[t]->Fill(th0mis[i]);
+                histoth[t]->Fill(esp.th0mis[i]);
             }
             double mean=histoth[t]->GetMean();
             double stddev=histoth[t]->GetStdDev();
             cout << "Th0: " << mean << " ± " << stddev << endl;
         }else if(t==1){
-            double min=findmin(th1mis);
-            double max=findmax(th1mis);
+            double min=findmin(esp.th1mis);
+            double max=findmax(esp.th1mis);
             histoth.push_back(new TH1F(Form("Legenda %d", t), Form("Th%d misurati", t), 100, min, max));
             for(int i=0; i<n; i++){
-                histoth[t]->Fill(th1mis[i]);
+                histoth[t]->Fill(esp.th1mis[i]);
             }
             double mean=histoth[t]->GetMean();
             double stddev=histoth[t]->GetStdDev();
             cout << "Th1: " << mean << " ± " << stddev << endl;
         }else if(t==2){
-            double min=findmin(th2mis);
-            double max=findmax(th2mis);
+            double min=findmin(esp.th2mis);
+            double max=findmax(esp.th2mis);
             histoth.push_back(new TH1F(Form("Legenda %d", t), Form("Th%d misurati", t), 100, min, max));
             for(int i=0; i<n; i++){
-                histoth[t]->Fill(th2mis[i]);
+                histoth[t]->Fill(esp.th2mis[i]);
             }
             double mean=histoth[t]->GetMean();
             double stddev=histoth[t]->GetStdDev();
@@ -79,62 +82,54 @@ vector<TH1F*> getth(int n, esperimentoprisma &e){
     }
     return histoth;
 }
-vector<TH1F*> getdm(int n, esperimentoprisma &e){
+
+/*doppiohisto getdm(int n, esperimento &esp.vector1, esperimento &esp.vector2){
+work in progress...
+}*/
+
+vector<TH1F*> getdm(int n, esperimento &esp){
     vector<TH1F*> histodm;
     for(auto &hist:histodm){
         hist->StatOverflows(kTRUE);
     }
-    vector<double> dm1mis;
-    vector<double> dm2mis;
-    for(int t=0; t<2; t++){
-        for(int i=0; i<n; i++){
-            e.esegui();
-            e.analizza();
-            if(t==0){
-                dm1mis.push_back(e.getdm1mis());
-            }else if(t==1){
-                dm2mis.push_back(e.getdm2mis());
-            }  
-        }
-    }
     double totdm1=0.;
     double totdm2=0.;
     for(int i=0; i<n; i++){
-        totdm1+=dm1mis[i];
-        totdm2+=dm2mis[i];
+        totdm1+=esp.dm1mis[i];
+        totdm2+=esp.dm2mis[i];
     }
     double meandm1=totdm1/n;
     double meandm2=totdm2/n;
     double sumsqdm1=0.;
     double sumsqdm2=0.;
     for(int i=0; i<n; i++){
-        sumsqdm1+=pow(dm1mis[i]-meandm1, 2);
-        sumsqdm2+=pow(dm2mis[i]-meandm2, 2);
+        sumsqdm1+=pow(esp.dm1mis[i]-meandm1, 2);
+        sumsqdm2+=pow(esp.dm2mis[i]-meandm2, 2);
     }
     double stddevdm1=sqrt(sumsqdm1/n);
     double stddevdm2=sqrt(sumsqdm2/n);
     for(int i=0; i<n; i++){
-        dm1mis[i]=dm1mis[i]-e.getdm1input();
-        dm2mis[i]=dm2mis[i]-e.getdm2input();
+        esp.dm1mis[i]=esp.dm1mis[i]-esp.dm1input[i];
+        esp.dm2mis[i]=esp.dm2mis[i]-esp.dm2input[i];
     }
     for(int t=0; t<2; t++){
         if(t==0){
-            double min=findmin(dm1mis);
-            double max=findmax(dm1mis);
+            double min=findmin(esp.dm1mis);
+            double max=findmax(esp.dm1mis);
             histodm.push_back(new TH1F(Form("Legenda %d", t+3), Form("Dm%d.mis-Dm%d.in", t+1, t+1), 100, min, max));
             for(int i=0; i<n; i++){
-                histodm[t]->Fill(dm1mis[i]);
+                histodm[t]->Fill(esp.dm1mis[i]);
             }
             double mean=histodm[t]->GetMean();
             double stddev=histodm[t]->GetStdDev();
             cout << "Dm1.mis: " << meandm1 << " ± " << stddevdm1 << endl;
             cout << "Dm1.mis-Dm1.in: " << mean << " ± " << stddev << endl;
         }else if(t==1){
-            double min=findmin(dm2mis);
-            double max=findmax(dm2mis);
+            double min=findmin(esp.dm2mis);
+            double max=findmax(esp.dm2mis);
             histodm.push_back(new TH1F(Form("Legenda %d", t+3), Form("Dm%d.mis-Dm%d.in", t+1, t+1), 100, min, max));
             for(int i=0; i<n; i++){
-                histodm[t]->Fill(dm2mis[i]);
+                histodm[t]->Fill(esp.dm2mis[i]);
             }
             double mean=histodm[t]->GetMean();
             double stddev=histodm[t]->GetStdDev();
@@ -144,9 +139,8 @@ vector<TH1F*> getdm(int n, esperimentoprisma &e){
     }
     return histodm;
 }
-TH2F getdm12(int n, esperimentoprisma &e){
-    vector<double> dm1mis;
-    vector<double> dm2mis;
+
+TH2F getdm12(int n, esperimento &esp){
     double sumx=0.;
     double sumy=0.;
     double sumxy=0.;
@@ -154,96 +148,80 @@ TH2F getdm12(int n, esperimentoprisma &e){
     double sumysq=0.;
     for(int t=0; t<2; t++){
         for(int i=0; i<n; i++){
-            e.esegui();
-            e.analizza();
             if(t==0){
-                dm1mis.push_back(e.getdm1mis());
-                sumx+=e.getdm1mis();
-                sumxsq+=pow(e.getdm1mis(), 2);
+                sumx+=esp.dm1mis[i];
+                sumxsq+=pow(esp.dm1mis[i], 2);
             }else if(t==1){
-                dm2mis.push_back(e.getdm2mis());
-                sumy+=e.getdm2mis();
-                sumysq+=pow(e.getdm2mis(), 2);
+                sumy+=esp.dm2mis[i];
+                sumysq+=pow(esp.dm2mis[i], 2);
             }
         }
     }
     for(int i=0; i<n; i++){
-        sumxy+=dm1mis[i]*dm2mis[i];
+        sumxy+=esp.dm1mis[i]*esp.dm2mis[i];
     }
     for(int i=0; i<n; i++){
-        dm1mis[i]=dm1mis[i]-e.getdm1input();
-        dm2mis[i]=dm2mis[i]-e.getdm2input();
+        esp.dm1mis[i]=esp.dm1mis[i]-esp.dm1input[i];
+        esp.dm2mis[i]=esp.dm2mis[i]-esp.dm2input[i];
     }
     double sigmax=sqrt((sumxsq/n)-pow(sumx/n, 2));
     double sigmay=sqrt((sumysq/n)-pow(sumy/n, 2));
     double corr=((sumxy/n)-(sumx/n)*(sumy/n))/(sigmax*sigmay);
-    double min1=findmin(dm1mis);
-    double max1=findmax(dm1mis);
-    double min2=findmin(dm2mis);
-    double max2=findmax(dm2mis);
+    double min1=findmin(esp.dm1mis);
+    double max1=findmax(esp.dm1mis);
+    double min2=findmin(esp.dm2mis);
+    double max2=findmax(esp.dm2mis);
     TH2F histodm12("Legenda 5", "(Dm1.mis-Dm1.in)/(Dm2.mis-Dm2.in)", 100, min1, max1, 100, min2, max2);
     for(int i=0; i<n; i++){
-        histodm12.Fill(dm1mis[i], dm2mis[i]);
+        histodm12.Fill(esp.dm1mis[i], esp.dm2mis[i]);
     }
     cout << "Corr. Dm1-Dm2: " << corr << endl;
     return histodm12;
 }
-vector<TH1F*> getn(int n, esperimentoprisma &e){
+
+vector<TH1F*> getn(int n, esperimento &esp){
     vector<TH1F*> histon;
     for(auto &hist:histon){
         hist->StatOverflows(kTRUE);
     }
-    vector<double> n1mis;
-    vector<double> n2mis;
-    for(int t=0; t<2; t++){
-        for(int i=0; i<n; i++){
-            e.esegui();
-            e.analizza();
-            if(t==0){
-                n1mis.push_back(e.getn1mis());
-            }else if(t==1){
-                n2mis.push_back(e.getn2mis());
-            }  
-        }
-    }
     double totn1=0.;
     double totn2=0.;
     for(int i=0; i<n; i++){
-        totn1+=n1mis[i];
-        totn2+=n2mis[i];
+        totn1+=esp.n1mis[i];
+        totn2+=esp.n2mis[i];
     }
     double meann1=totn1/n;
     double meann2=totn2/n;
     double sumsqn1=0.;
     double sumsqn2=0.;
     for(int i=0; i<n; i++){
-        sumsqn1+=pow(n1mis[i]-meann1, 2);
-        sumsqn2+=pow(n2mis[i]-meann2, 2);
+        sumsqn1+=pow(esp.n1mis[i]-meann1, 2);
+        sumsqn2+=pow(esp.n2mis[i]-meann2, 2);
     }
     double stddevn1=sqrt(sumsqn1/n);
     double stddevn2=sqrt(sumsqn2/n);
     for(int i=0; i<n; i++){
-        n1mis[i]=n1mis[i]-e.getn1input();
-        n2mis[i]=n2mis[i]-e.getn2input();
+        esp.n1mis[i]=esp.n1mis[i]-esp.n1input[i];
+        esp.n2mis[i]=esp.n2mis[i]-esp.n2input[i];
     }
     for(int t=0; t<2; t++){
         if(t==0){
-            double min=findmin(n1mis);
-            double max=findmax(n1mis);
+            double min=findmin(esp.n1mis);
+            double max=findmax(esp.n1mis);
             histon.push_back(new TH1F(Form("Legenda %d", t+6), Form("n%d.mis-n%d.in", t+1, t+1), 100, min, max));
             for(int i=0; i<n; i++){
-                histon[t]->Fill(n1mis[i]);
+                histon[t]->Fill(esp.n1mis[i]);
             }
             double mean=histon[t]->GetMean();
             double stddev=histon[t]->GetStdDev();
             cout << "n1.mis: " << meann1 << " ± " << stddevn1 << endl;
             cout << "n1.mis-n1.in: " << mean << " ± " << stddev << endl;
         }else if(t==1){
-            double min=findmin(n2mis);
-            double max=findmax(n2mis);
+            double min=findmin(esp.n2mis);
+            double max=findmax(esp.n2mis);
             histon.push_back(new TH1F(Form("Legenda %d", t+6), Form("n%d.mis-n%d.in", t+1, t+1), 100, min, max));
             for(int i=0; i<n; i++){
-                histon[t]->Fill(n2mis[i]);
+                histon[t]->Fill(esp.n2mis[i]);
             }
             double mean=histon[t]->GetMean();
             double stddev=histon[t]->GetStdDev();
@@ -253,9 +231,8 @@ vector<TH1F*> getn(int n, esperimentoprisma &e){
     }
     return histon;
 }
-TH2F getn12(int n, esperimentoprisma &e){
-    vector<double> n1mis;
-    vector<double> n2mis;
+
+TH2F getn12(int n, esperimento &esp){
     double sumx=0.;
     double sumy=0.;
     double sumxy=0.;
@@ -263,96 +240,80 @@ TH2F getn12(int n, esperimentoprisma &e){
     double sumysq=0.;
     for(int t=0; t<2; t++){
         for(int i=0; i<n; i++){
-            e.esegui();
-            e.analizza();
             if(t==0){
-                n1mis.push_back(e.getn1mis());
-                sumx+=e.getn1mis();
-                sumxsq+=pow(e.getn1mis(), 2);
+                sumx+=esp.n1mis[i];
+                sumxsq+=pow(esp.n1mis[i], 2);
             }else if(t==1){
-                n2mis.push_back(e.getn2mis());
-                sumy+=e.getn2mis();
-                sumysq+=pow(e.getn2mis(), 2);
+                sumy+=esp.n2mis[i];
+                sumysq+=pow(esp.n2mis[i], 2);
             }
         }
     }
     for(int i=0; i<n; i++){
-        sumxy+=n1mis[i]*n2mis[i];
+        sumxy+=esp.n1mis[i]*esp.n2mis[i];
     }
     for(int i=0; i<n; i++){
-        n1mis[i]=n1mis[i]-e.getn1input();
-        n2mis[i]=n2mis[i]-e.getn2input();
+        esp.n1mis[i]=esp.n1mis[i]-esp.n1input[i];
+        esp.n2mis[i]=esp.n2mis[i]-esp.n2input[i];
     }
     double sigmax=sqrt((sumxsq/n)-pow(sumx/n, 2));
     double sigmay=sqrt((sumysq/n)-pow(sumy/n, 2));
     double corr=((sumxy/n)-(sumx/n)*(sumy/n))/(sigmax*sigmay);
-    double min1=findmin(n1mis);
-    double max1=findmax(n1mis);
-    double min2=findmin(n2mis);
-    double max2=findmax(n2mis);
+    double min1=findmin(esp.n1mis);
+    double max1=findmax(esp.n1mis);
+    double min2=findmin(esp.n2mis);
+    double max2=findmax(esp.n2mis);
     TH2F histon12("Legenda 8", "(n1.mis-n1.in)/(n2.mis-n2.in)", 100, min1, max1, 100, min2, max2);
     for(int i=0; i<n; i++){
-        histon12.Fill(n1mis[i], n2mis[i]);
+        histon12.Fill(esp.n1mis[i], esp.n2mis[i]);
     }
     cout << "Corr. n1-n2: " << corr << endl;
     return histon12;
 }
-vector<TH1F*> gettab(int n, esperimentoprisma &e){
+
+vector<TH1F*> gettab(int n, esperimento &esp){
     vector<TH1F*> histoab;
     for(auto &hist:histoab){
         hist->StatOverflows(kTRUE);
     }
-    vector<double> amis;
-    vector<double> bmis;
-    for(int t=0; t<2; t++){
-        for(int i=0; i<n; i++){
-            e.esegui();
-            e.analizza();
-            if(t==0){
-                amis.push_back(e.getamis());
-            }else if(t==1){
-                bmis.push_back(e.getbmis());
-            }  
-        }
-    }
     double tota=0.;
     double totb=0.;
     for(int i=0; i<n; i++){
-        tota+=amis[i];
-        totb+=bmis[i];
+        tota+=esp.amis[i];
+        totb+=esp.bmis[i];
     }
     double meana=tota/n;
     double meanb=totb/n;
     double sumsqa=0.;
     double sumsqb=0.;
     for(int i=0; i<n; i++){
-        sumsqa+=pow(amis[i]-meana, 2);
-        sumsqb+=pow(bmis[i]-meanb, 2);
+        sumsqa+=pow(esp.amis[i]-meana, 2);
+        sumsqb+=pow(esp.bmis[i]-meanb, 2);
     }
     double stddeva=sqrt(sumsqa/n);
     double stddevb=sqrt(sumsqb/n);
     for(int i=0; i<n; i++){
-        amis[i]=amis[i]-e.getainput();
-        bmis[i]=bmis[i]-e.getbinput();
+        esp.amis[i]=esp.amis[i]-esp.ainput[i];
+        esp.bmis[i]=esp.bmis[i]-esp.binput[i];
     }
     for(int t=0; t<2; t++){
         if(t==0){
-            double min=findmin(amis);
-            double max=findmax(amis);
+            double min=findmin(esp.amis);
+            double max=findmax(esp.amis);
             histoab.push_back(new TH1F(Form("Legenda %d", t+9),"A.mis-A.in", 100, min, max));
             for(int i=0; i<n; i++){
-                histoab[t]->Fill(amis[i]);
+                histoab[t]->Fill(esp.amis[i]);
             }
             double mean=histoab[t]->GetMean();
             double stddev=histoab[t]->GetStdDev();
             cout << "A.mis: " << meana << " ± " << stddeva << endl;
             cout << "A.mis-A.in: " << mean << " ± " << stddev << endl;
         }else if(t==1){
-            double min=findmin(bmis);
-            double max=findmax(bmis);
+            double min=findmin(esp.bmis);
+            double max=findmax(esp.bmis);
             histoab.push_back(new TH1F(Form("Legenda %d", t+9),"B.mis-B.in", 100, min, max));
             for(int i=0; i<n; i++){
-                histoab[t]->Fill(bmis[i]);
+                histoab[t]->Fill(esp.bmis[i]);
             }
             double mean=histoab[t]->GetMean();
             double stddev=histoab[t]->GetStdDev();
@@ -362,9 +323,8 @@ vector<TH1F*> gettab(int n, esperimentoprisma &e){
     }
     return histoab;
 }
-TH2F getab(int n, esperimentoprisma &e){
-    vector<double> amis;
-    vector<double> bmis;
+
+TH2F getab(int n, esperimento &esp){
     double sumx=0.;
     double sumy=0.;
     double sumxy=0.;
@@ -372,36 +332,32 @@ TH2F getab(int n, esperimentoprisma &e){
     double sumysq=0.;
     for(int t=0; t<2; t++){
         for(int i=0; i<n; i++){
-            e.esegui();
-            e.analizza();
             if(t==0){
-                amis.push_back(e.getamis());
-                sumx+=e.getamis(); 
-                sumxsq+=pow(e.getamis(), 2); 
+                sumx+=esp.amis[i]; 
+                sumxsq+=pow(esp.amis[i], 2); 
             }else if(t==1){
-                bmis.push_back(e.getbmis());
-                sumy+=e.getbmis();
-                sumysq+=pow(e.getbmis(), 2);
+                sumy+=esp.bmis[i];
+                sumysq+=pow(esp.bmis[i], 2);
             } 
         }
     }
     for(int i=0; i<n; i++){
-        sumxy+=amis[i]*bmis[i];
+        sumxy+=esp.amis[i]*esp.bmis[i];
     }
     for(int i=0; i<n; i++){
-        amis[i]=amis[i]-e.getainput();
-        bmis[i]=bmis[i]-e.getbinput();
+        esp.amis[i]=esp.amis[i]-esp.ainput[i];
+        esp.bmis[i]=esp.bmis[i]-esp.binput[i];
     }
     double sigmax=sqrt((sumxsq/n)-pow(sumx/n, 2));
     double sigmay=sqrt((sumysq/n)-pow(sumy/n, 2));
     double corr=((sumxy/n)-(sumx/n)*(sumy/n))/(sigmax*sigmay);
-    double min1=findmin(amis);
-    double max1=findmax(amis);
-    double min2=findmin(bmis);
-    double max2=findmax(bmis);
+    double min1=findmin(esp.amis);
+    double max1=findmax(esp.amis);
+    double min2=findmin(esp.bmis);
+    double max2=findmax(esp.bmis);
     TH2F histoab("Legenda 11", "(A.mis-A.in)/(B.mis-B.in)", 100, min1, max1, 100, min2, max2);
     for(int i=0; i<n; i++){
-        histoab.Fill(amis[i], bmis[i]);
+        histoab.Fill(esp.amis[i], esp.bmis[i]);
     }
     cout << "Corr. A-B: " << corr << endl;
     return histoab;
