@@ -57,6 +57,7 @@ vector<TH1F*> getth(int n, esperimento &esp){
             }
             double mean=histoth[t]->GetMean();
             double stddev=histoth[t]->GetStdDev();
+            cout << "Th0: " << mean << " ± " << stddev << endl;
         }else if(t==1){
             double min=findmin(esp.th1mis);
             double max=findmax(esp.th1mis);
@@ -66,6 +67,7 @@ vector<TH1F*> getth(int n, esperimento &esp){
             }
             double mean=histoth[t]->GetMean();
             double stddev=histoth[t]->GetStdDev();
+            cout << "Th1: " << mean << " ± " << stddev << endl;
         }else if(t==2){
             double min=findmin(esp.th2mis);
             double max=findmax(esp.th2mis);
@@ -75,6 +77,7 @@ vector<TH1F*> getth(int n, esperimento &esp){
             }
             double mean=histoth[t]->GetMean();
             double stddev=histoth[t]->GetStdDev();
+            cout << "Th2: " << mean << " ± " << stddev << endl;
         }
     }
     return histoth;
@@ -89,6 +92,22 @@ vector<TH1F*> getdm(int n, esperimento &esp){
     for(auto &hist:histodm){
         hist->StatOverflows(kTRUE);
     }
+    double totdm1=0.;
+    double totdm2=0.;
+    for(int i=0; i<n; i++){
+        totdm1+=esp.dm1mis[i];
+        totdm2+=esp.dm2mis[i];
+    }
+    double meandm1=totdm1/n;
+    double meandm2=totdm2/n;
+    double sumsqdm1=0.;
+    double sumsqdm2=0.;
+    for(int i=0; i<n; i++){
+        sumsqdm1+=pow(esp.dm1mis[i]-meandm1, 2);
+        sumsqdm2+=pow(esp.dm2mis[i]-meandm2, 2);
+    }
+    double stddevdm1=sqrt(sumsqdm1/n);
+    double stddevdm2=sqrt(sumsqdm2/n);
     for(int i=0; i<n; i++){
         esp.dm1mis[i]=esp.dm1mis[i]-esp.dm1input[i];
         esp.dm2mis[i]=esp.dm2mis[i]-esp.dm2input[i];
@@ -103,6 +122,8 @@ vector<TH1F*> getdm(int n, esperimento &esp){
             }
             double mean=histodm[t]->GetMean();
             double stddev=histodm[t]->GetStdDev();
+            cout << "Dm1.mis: " << meandm1 << " ± " << stddevdm1 << endl;
+            cout << "Dm1.mis-Dm1.in: " << mean << " ± " << stddev << endl;
         }else if(t==1){
             double min=findmin(esp.dm2mis);
             double max=findmax(esp.dm2mis);
@@ -112,12 +133,40 @@ vector<TH1F*> getdm(int n, esperimento &esp){
             }
             double mean=histodm[t]->GetMean();
             double stddev=histodm[t]->GetStdDev();
+            cout << "Dm2.mis: " << meandm2 << " ± " << stddevdm2 << endl;
+            cout << "Dm2.mis-Dm2.in: " << mean << " ± " << stddev << endl;
         }
     }
     return histodm;
 }
 
 TH2F getdm12(int n, esperimento &esp){
+    double sumx=0.;
+    double sumy=0.;
+    double sumxy=0.;
+    double sumxsq=0.;
+    double sumysq=0.;
+    for(int t=0; t<2; t++){
+        for(int i=0; i<n; i++){
+            if(t==0){
+                sumx+=esp.dm1mis[i];
+                sumxsq+=pow(esp.dm1mis[i], 2);
+            }else if(t==1){
+                sumy+=esp.dm2mis[i];
+                sumysq+=pow(esp.dm2mis[i], 2);
+            }
+        }
+    }
+    for(int i=0; i<n; i++){
+        sumxy+=esp.dm1mis[i]*esp.dm2mis[i];
+    }
+    for(int i=0; i<n; i++){
+        esp.dm1mis[i]=esp.dm1mis[i]-esp.dm1input[i];
+        esp.dm2mis[i]=esp.dm2mis[i]-esp.dm2input[i];
+    }
+    double sigmax=sqrt((sumxsq/n)-pow(sumx/n, 2));
+    double sigmay=sqrt((sumysq/n)-pow(sumy/n, 2));
+    double corr=((sumxy/n)-(sumx/n)*(sumy/n))/(sigmax*sigmay);
     double min1=findmin(esp.dm1mis);
     double max1=findmax(esp.dm1mis);
     double min2=findmin(esp.dm2mis);
@@ -126,6 +175,7 @@ TH2F getdm12(int n, esperimento &esp){
     for(int i=0; i<n; i++){
         histodm12.Fill(esp.dm1mis[i], esp.dm2mis[i]);
     }
+    cout << "Corr. Dm1-Dm2: " << corr << endl;
     return histodm12;
 }
 
@@ -134,6 +184,22 @@ vector<TH1F*> getn(int n, esperimento &esp){
     for(auto &hist:histon){
         hist->StatOverflows(kTRUE);
     }
+    double totn1=0.;
+    double totn2=0.;
+    for(int i=0; i<n; i++){
+        totn1+=esp.n1mis[i];
+        totn2+=esp.n2mis[i];
+    }
+    double meann1=totn1/n;
+    double meann2=totn2/n;
+    double sumsqn1=0.;
+    double sumsqn2=0.;
+    for(int i=0; i<n; i++){
+        sumsqn1+=pow(esp.n1mis[i]-meann1, 2);
+        sumsqn2+=pow(esp.n2mis[i]-meann2, 2);
+    }
+    double stddevn1=sqrt(sumsqn1/n);
+    double stddevn2=sqrt(sumsqn2/n);
     for(int i=0; i<n; i++){
         esp.n1mis[i]=esp.n1mis[i]-esp.n1input[i];
         esp.n2mis[i]=esp.n2mis[i]-esp.n2input[i];
@@ -148,6 +214,8 @@ vector<TH1F*> getn(int n, esperimento &esp){
             }
             double mean=histon[t]->GetMean();
             double stddev=histon[t]->GetStdDev();
+            cout << "n1.mis: " << meann1 << " ± " << stddevn1 << endl;
+            cout << "n1.mis-n1.in: " << mean << " ± " << stddev << endl;
         }else if(t==1){
             double min=findmin(esp.n2mis);
             double max=findmax(esp.n2mis);
@@ -157,12 +225,40 @@ vector<TH1F*> getn(int n, esperimento &esp){
             }
             double mean=histon[t]->GetMean();
             double stddev=histon[t]->GetStdDev();
+            cout << "n2.mis: " << meann2 << " ± " << stddevn2 << endl;
+            cout << "n2.mis-n2.in: " << mean << " ± " << stddev << endl;
         }
     }
     return histon;
 }
 
 TH2F getn12(int n, esperimento &esp){
+    double sumx=0.;
+    double sumy=0.;
+    double sumxy=0.;
+    double sumxsq=0.;
+    double sumysq=0.;
+    for(int t=0; t<2; t++){
+        for(int i=0; i<n; i++){
+            if(t==0){
+                sumx+=esp.n1mis[i];
+                sumxsq+=pow(esp.n1mis[i], 2);
+            }else if(t==1){
+                sumy+=esp.n2mis[i];
+                sumysq+=pow(esp.n2mis[i], 2);
+            }
+        }
+    }
+    for(int i=0; i<n; i++){
+        sumxy+=esp.n1mis[i]*esp.n2mis[i];
+    }
+    for(int i=0; i<n; i++){
+        esp.n1mis[i]=esp.n1mis[i]-esp.n1input[i];
+        esp.n2mis[i]=esp.n2mis[i]-esp.n2input[i];
+    }
+    double sigmax=sqrt((sumxsq/n)-pow(sumx/n, 2));
+    double sigmay=sqrt((sumysq/n)-pow(sumy/n, 2));
+    double corr=((sumxy/n)-(sumx/n)*(sumy/n))/(sigmax*sigmay);
     double min1=findmin(esp.n1mis);
     double max1=findmax(esp.n1mis);
     double min2=findmin(esp.n2mis);
@@ -171,6 +267,7 @@ TH2F getn12(int n, esperimento &esp){
     for(int i=0; i<n; i++){
         histon12.Fill(esp.n1mis[i], esp.n2mis[i]);
     }
+    cout << "Corr. n1-n2: " << corr << endl;
     return histon12;
 }
 
@@ -179,6 +276,22 @@ vector<TH1F*> gettab(int n, esperimento &esp){
     for(auto &hist:histoab){
         hist->StatOverflows(kTRUE);
     }
+    double tota=0.;
+    double totb=0.;
+    for(int i=0; i<n; i++){
+        tota+=esp.amis[i];
+        totb+=esp.bmis[i];
+    }
+    double meana=tota/n;
+    double meanb=totb/n;
+    double sumsqa=0.;
+    double sumsqb=0.;
+    for(int i=0; i<n; i++){
+        sumsqa+=pow(esp.amis[i]-meana, 2);
+        sumsqb+=pow(esp.bmis[i]-meanb, 2);
+    }
+    double stddeva=sqrt(sumsqa/n);
+    double stddevb=sqrt(sumsqb/n);
     for(int i=0; i<n; i++){
         esp.amis[i]=esp.amis[i]-esp.ainput[i];
         esp.bmis[i]=esp.bmis[i]-esp.binput[i];
@@ -193,6 +306,8 @@ vector<TH1F*> gettab(int n, esperimento &esp){
             }
             double mean=histoab[t]->GetMean();
             double stddev=histoab[t]->GetStdDev();
+            cout << "A.mis: " << meana << " ± " << stddeva << endl;
+            cout << "A.mis-A.in: " << mean << " ± " << stddev << endl;
         }else if(t==1){
             double min=findmin(esp.bmis);
             double max=findmax(esp.bmis);
@@ -202,12 +317,40 @@ vector<TH1F*> gettab(int n, esperimento &esp){
             }
             double mean=histoab[t]->GetMean();
             double stddev=histoab[t]->GetStdDev();
+            cout << "B.mis: " << meanb << " ± " << stddevb << endl;
+            cout << "B.mis-B.in: " << mean << " ± " << stddev << endl;
         }
     }
     return histoab;
 }
 
 TH2F getab(int n, esperimento &esp){
+    double sumx=0.;
+    double sumy=0.;
+    double sumxy=0.;
+    double sumxsq=0.;
+    double sumysq=0.;
+    for(int t=0; t<2; t++){
+        for(int i=0; i<n; i++){
+            if(t==0){
+                sumx+=esp.amis[i]; 
+                sumxsq+=pow(esp.amis[i], 2); 
+            }else if(t==1){
+                sumy+=esp.bmis[i];
+                sumysq+=pow(esp.bmis[i], 2);
+            } 
+        }
+    }
+    for(int i=0; i<n; i++){
+        sumxy+=esp.amis[i]*esp.bmis[i];
+    }
+    for(int i=0; i<n; i++){
+        esp.amis[i]=esp.amis[i]-esp.ainput[i];
+        esp.bmis[i]=esp.bmis[i]-esp.binput[i];
+    }
+    double sigmax=sqrt((sumxsq/n)-pow(sumx/n, 2));
+    double sigmay=sqrt((sumysq/n)-pow(sumy/n, 2));
+    double corr=((sumxy/n)-(sumx/n)*(sumy/n))/(sigmax*sigmay);
     double min1=findmin(esp.amis);
     double max1=findmax(esp.amis);
     double min2=findmin(esp.bmis);
@@ -216,6 +359,7 @@ TH2F getab(int n, esperimento &esp){
     for(int i=0; i<n; i++){
         histoab.Fill(esp.amis[i], esp.bmis[i]);
     }
+    cout << "Corr. A-B: " << corr << endl;
     return histoab;
 }
 void drawgraph(vector<TH1F*> &histoth, vector<TH1F*> &histodm, TH2F &histodm12,
