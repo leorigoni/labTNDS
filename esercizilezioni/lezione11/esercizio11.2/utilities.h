@@ -6,29 +6,56 @@
 #include"TLine.h"
 #include"TH1F.h"
 
-vector<double> calcint(int n, int toth, int tmp, double a, double b, string method){
-    vector<double> dati;
-    if(method=="media"){
-        for(int i=0; i<toth; i++){
-            xsinx f;
-            media m(0);
-            for(int j=0; j<n; j++){
-                dati.push_back(m.integra(tmp*5, a, b, f));
-                cout << i+1 << "." << j << ": "<< m.integra(tmp*5, a, b, f) << endl;
-            }
-            tmp=tmp*5;
-        }    
-    }else if(method=="hitmiss"){
-        for(int i=0; i<toth; i++){
-            xsinx f;
-            hitmiss m(0);
-            for(int j=0; j<n; j++){
-                dati.push_back(m.integra(tmp*5, a, b, f));
-                cout << i+1 << "." << j << ": "<< m.integra(tmp*5, a, b, f) << endl;
-            }
-            tmp=tmp*5;
+double findymax(double a, double b, const funzione &f){
+    double ymax=numeric_limits<double>::lowest();
+    double tmp=0.;
+    for(double i=a; i<b; i+=0.0001){
+        tmp=f.eval(i);
+        if(tmp>ymax){
+            ymax=tmp;
         }
     }
+    return ymax;
+}
+double findmaxfirst(vector<double> &dati, int toth){
+    double max=numeric_limits<double>::lowest();
+    for(int i=0; i<static_cast<int>(dati.size()/toth); i++){
+        if(dati[i]>max){
+            max=dati[i];
+        }
+    }
+    return max;
+}
+double findminfirst(vector<double> &dati, int toth){
+    double min=numeric_limits<double>::max();
+    for(int i=0; i<static_cast<int>(dati.size()/toth); i++){
+        if(dati[i]<min){
+            min=dati[i];
+        }
+    }
+    return min;
+}
+vector<double> calcint(int n, int toth, int tmp, double a, double b, integrale *m){
+    double inizio=min(a, b);
+    double fine=max(a, b);
+    int sgn;
+    if(a<b){
+        sgn=1;
+    }else{
+        sgn=-1;
+    }
+    vector<double> dati;
+    xsinx f;
+    double ymax=findymax(inizio, fine, f);
+    double tmpint;
+    for(int i=0; i<toth; i++){
+        tmp=tmp*5;
+        for(int j=0; j<n; j++){
+            tmpint=m->integra(tmp, inizio, fine, f, ymax, sgn);
+            dati.push_back(tmpint);
+            cout << i+1 << "." << j << ": "<< tmpint << endl;
+        }
+    }    
     return dati;
 }
 void creafile(vector<double> &dati, string filename){
@@ -54,8 +81,10 @@ vector<double> copiadati(string filename){
 vector<TH1F*> istogrammi(int n, int toth, vector<double> &dati){
     int tmp=20;
     vector<TH1F*> histo;
+    double max=findmaxfirst(dati, toth);
+    double min=findminfirst(dati, toth);
     for (int i=0; i<toth; i++){
-        histo.push_back(new TH1F(Form("Legenda %d", i+1), Form("Integrale (N: %d)", tmp*5), 100, 0.5, 1.5));
+        histo.push_back(new TH1F(Form("Legenda %d", i+1), Form("Integrale (N: %d)", tmp*5), 100, min, max));
         tmp=tmp*5;
     }
     for(int i=0; i<toth; i++){
