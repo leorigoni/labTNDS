@@ -8,3 +8,5 @@ esercizio3.0: $(TT) $(NN) $(DD)
 
 clean:
 	rm -r $(SS) 1941out.txt
+
+co
